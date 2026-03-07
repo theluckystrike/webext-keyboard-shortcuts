@@ -1,130 +1,122 @@
 # webext-keyboard-shortcuts
 
-Keyboard shortcut manager for Chrome and browser extensions. Register hotkeys with combo detection, check for conflicts with built-in browser shortcuts, and integrate with the Chrome commands API. Works with Manifest V3.
+[![npm version](https://img.shields.io/npm/v/webext-keyboard-shortcuts.svg)](https://www.npmjs.com/package/webext-keyboard-shortcuts)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.3+-3178c6.svg)](https://www.typescriptlang.org/)
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-INSTALL
+Keyboard shortcut manager for Chrome extensions — register hotkeys, detect key combos, check for conflicts with built-in browser shortcuts, and integrate seamlessly with the Chrome commands API. Works with Manifest V3.
 
-```
+## Install
+
+```bash
 npm install webext-keyboard-shortcuts
 ```
 
-QUICK START
+## Usage
 
 ```typescript
 import { KeyboardShortcuts } from 'webext-keyboard-shortcuts';
 
+// Create instance (automatically attaches keydown listener)
 const shortcuts = new KeyboardShortcuts();
 
-shortcuts.register('Ctrl+Shift+S', () => saveData(), 'Save data');
-shortcuts.register('Ctrl+K', () => openSearch(), 'Quick search');
+// Register keyboard shortcuts
+shortcuts.register('Ctrl+Shift+S', () => {
+  console.log('Save triggered!');
+}, 'Save data');
+
+shortcuts.register('Ctrl+K', () => {
+  console.log('Quick search opened!');
+}, 'Open quick search');
+
+// Chain multiple registrations
+shortcuts
+  .register('Ctrl+S', () => save(), 'Save document')
+  .register('Ctrl+Shift+F', () => find(), 'Find in page');
+
+// Check for conflicts with Chrome's built-in shortcuts
+const conflicts = shortcuts.getConflicts('Ctrl+T');
+if (conflicts.length > 0) {
+  console.warn('Shortcut conflicts with:', conflicts);
+}
+
+// Disable shortcuts when user is typing in an input
+document.querySelector('input')?.addEventListener('focus', () => shortcuts.disable());
+document.querySelector('input')?.addEventListener('blur', () => shortcuts.enable());
+
+// Integrate with Chrome extension commands
+KeyboardShortcuts.onCommand((command) => {
+  console.log('Chrome command triggered:', command);
+});
+
+const commands = await KeyboardShortcuts.getCommands();
+console.log('Registered Chrome commands:', commands);
 ```
 
-API
+## API Reference
 
-The library exports the KeyboardShortcuts class and the Shortcut type.
+### Types
 
-Shortcut type
+#### `Shortcut`
 
 ```typescript
 interface Shortcut {
-  keys: string;
-  action: () => void;
-  description?: string;
+  keys: string;           // Key combo (e.g., "Ctrl+Shift+S")
+  action: () => void;    // Callback function to execute
+  description?: string;  // Optional description for UI display
 }
 ```
 
-KeyboardShortcuts class
+### Class: `KeyboardShortcuts`
 
-Creating an instance automatically attaches a keydown listener to the document.
+Creates a new keyboard shortcut manager. Automatically attaches a `keydown` event listener to the document.
 
 ```typescript
 const shortcuts = new KeyboardShortcuts();
 ```
 
-register(keys, action, description?)
+#### Methods
 
-Register a keyboard shortcut. Keys use a plus-separated format like "Ctrl+Shift+S". Modifier keys are normalized so that Meta and Cmd are treated as Ctrl. Returns the instance for chaining.
+| Method | Description |
+|--------|-------------|
+| `register(keys, action, description?)` | Register a keyboard shortcut. Returns `this` for method chaining. |
+| `unregister(keys)` | Remove a previously registered shortcut. |
+| `getAll()` | Returns all registered `Shortcut` objects as an array. |
+| `enable()` | Enable all shortcuts. |
+| `disable()` | Disable all shortcuts (useful when user is typing in input fields). |
+| `getConflicts(keys)` | Check for conflicts with built-in Chrome shortcuts. Returns an array of conflicting shortcuts. |
 
-```typescript
-shortcuts
-  .register('Ctrl+S', () => save(), 'Save')
-  .register('Ctrl+Shift+F', () => find(), 'Find in page');
-```
+#### Static Methods
 
-unregister(keys)
+| Method | Description |
+|--------|-------------|
+| `KeyboardShortcuts.onCommand(callback)` | Listen for Chrome extension command events via `chrome.commands.onCommand`. |
+| `KeyboardShortcuts.getCommands()` | Get all registered Chrome extension commands from the manifest. Returns a Promise. |
 
-Remove a previously registered shortcut.
+### Key Format
 
-```typescript
-shortcuts.unregister('Ctrl+S');
-```
+Keys are case-insensitive and whitespace is stripped during normalization. The library maps `Meta` and `Cmd` to `Ctrl` for cross-platform compatibility.
 
-getAll()
+**Valid examples:**
+- `Ctrl+S`
+- `Ctrl+Shift+K`
+- `Alt+H`
+- `Cmd+Shift+S` (treated as `Ctrl+Shift+S`)
+- `F5`
 
-Returns an array of all registered Shortcut objects.
-
-```typescript
-const all = shortcuts.getAll();
-```
-
-enable() / disable()
-
-Toggle whether shortcuts fire. Useful when the user is typing in an input field.
-
-```typescript
-shortcuts.disable();
-// later
-shortcuts.enable();
-```
-
-getConflicts(keys)
-
-Check if a key combo conflicts with common Chrome built-in shortcuts such as Ctrl+T, Ctrl+W, F5, F11, F12, and others. Returns an array of matching Chrome shortcuts.
-
-```typescript
-const conflicts = shortcuts.getConflicts('Ctrl+T');
-// ['Ctrl+T']
-```
-
-KeyboardShortcuts.onCommand(callback) (static)
-
-Listen for Chrome extension command events via chrome.commands.onCommand.
-
-```typescript
-KeyboardShortcuts.onCommand((command) => {
-  console.log('Command received', command);
-});
-```
-
-KeyboardShortcuts.getCommands() (static)
-
-Get all registered Chrome extension commands from the manifest.
-
-```typescript
-const commands = await KeyboardShortcuts.getCommands();
-```
-
-KEY FORMAT
-
-Keys are case-insensitive and whitespace is stripped during normalization. The library maps Meta and Cmd to Ctrl so shortcuts work across platforms.
-
-Valid examples
-
-- Ctrl+S
-- Ctrl+Shift+K
-- Alt+H
-- Cmd+Shift+S (treated as Ctrl+Shift+S)
-- F5
-
-REQUIREMENTS
+## Requirements
 
 - TypeScript 5.3+
 - A browser environment with DOM access (content scripts, popups, options pages)
-- For static methods, the chrome.commands API must be available
+- For static methods, the `chrome.commands` API must be available
 
-DEVELOPMENT
+## Chrome Extension Guide
 
-```
+For more information on keyboard shortcuts in Chrome extensions, see the official [Chrome Extension Commands documentation](https://developer.chrome.com/docs/extensions/mv3/commands/).
+
+## Development
+
+```bash
 git clone https://github.com/theluckystrike/webext-keyboard-shortcuts.git
 cd webext-keyboard-shortcuts
 npm install
@@ -132,10 +124,6 @@ npm run build
 npm test
 ```
 
-LICENSE
+## License
 
-MIT. See LICENSE file.
-
-ABOUT
-
-Built by theluckystrike. Part of the Zovo project at zovo.one.
+MIT — Built by [theluckystrike](https://github.com/theluckystrike) | [zovo.one](https://zovo.one)

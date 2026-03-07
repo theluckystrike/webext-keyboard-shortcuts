@@ -1,8 +1,9 @@
-# webext-keyboard-shortcuts
+[![CI](https://github.com/theluckystrike/webext-keyboard-shortcuts/actions/workflows/ci.yml/badge.svg)](https://github.com/theluckystrike/webext-keyboard-shortcuts/actions)
+[![npm](https://img.shields.io/npm/v/@theluckystrike/webext-keyboard-shortcuts)](https://www.npmjs.com/package/@theluckystrike/webext-keyboard-shortcuts)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
 
-[![npm version](https://img.shields.io/npm/v/webext-keyboard-shortcuts.svg)](https://www.npmjs.com/package/webext-keyboard-shortcuts)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.3+-3178c6.svg)](https://www.typescriptlang.org/)
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+# webext-keyboard-shortcuts
 
 Keyboard shortcut manager for Chrome extensions — register hotkeys, detect key combos, check for conflicts with built-in browser shortcuts, and integrate seamlessly with the Chrome commands API. Works with Manifest V3.
 
@@ -126,4 +127,7 @@ npm test
 
 ## License
 
-MIT — Built by [theluckystrike](https://github.com/theluckystrike) | [zovo.one](https://zovo.one)
+MIT
+
+---
+Built by [theluckystrike](https://github.com/theluckystrike) — [zovo.one](https://zovo.one)

@@ -1,41 +1,49 @@
 {
-    "name": "webext-keyboard-shortcuts",
-    "version": "0.1.0",
-    "description": "Keyboard shortcut manager for Chrome extensions — register hotkeys, combo detection, shortcut customization UI, and conflict detection.",
-    "author": "Zovo <hello@zovo.one>",
-    "license": "MIT",
-    "keywords": [
-        "chrome-extension",
-        "keyboard",
-        "shortcuts",
-        "hotkeys",
-        "keybindings",
-        "manifest-v3",
-        "browser-extension",
-        "commands",
-        "accelerator"
-    ],
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/theluckystrike/webext-keyboard-shortcuts.git"
-    },
-    "main": "./dist/index.js",
-    "types": "./dist/index.d.ts",
-    "files": [
-        "dist",
-        "README.md",
-        "LICENSE"
-    ],
-    "scripts": {
-        "build": "tsc",
-        "test": "jest --passWithNoTests",
-        "prepublishOnly": "npm run build"
-    },
-    "devDependencies": {
-        "@types/chrome": "^0.0.260",
-        "@types/jest": "^30.0.0",
-        "jest": "^30.2.0",
-        "ts-jest": "^29.4.6",
-        "typescript": "^5.3.3"
+  "name": "webext-keyboard-shortcuts",
+  "version": "0.1.0",
+  "description": "Keyboard shortcut manager for Chrome extensions — register hotkeys, combo detection, shortcut customization UI, and conflict detection.",
+  "author": "Zovo <hello@zovo.one>",
+  "license": "MIT",
+  "keywords": [
+    "chrome-extension",
+    "keyboard",
+    "shortcuts",
+    "hotkeys",
+    "keybindings",
+    "manifest-v3",
+    "browser-extension",
+    "commands",
+    "accelerator"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/theluckystrike/webext-keyboard-shortcuts.git"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "jest --passWithNoTests",
+    "prepublishOnly": "npm run build",
+    "prepare": "npm run build"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.260",
+    "@types/jest": "^30.0.0",
+    "jest": "^30.2.0",
+    "ts-jest": "^29.4.6",
+    "typescript": "^5.3.3"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
     }
+  }
 }
